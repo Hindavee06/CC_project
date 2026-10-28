@@ -1,0 +1,424 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Study Notes</title>
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@500;700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{--ink:#0f2740;--text:#22364d;--muted:#5d7189;--bg:#eef3f8;--card:#fff;--line:#d5dfeb;--blue:#1769e0;--sky:#dbe9fd;--amber:#f5b301;--green:#16845b;--red:#c0392b;--r:10px}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;font-family:Inter,Arial,sans-serif;background:var(--bg);color:var(--text);line-height:1.6}
+h1,h2,h3{font-family:Sora,Arial,sans-serif;color:var(--ink);line-height:1.25;margin:0}
+a{color:var(--blue)}
+:focus-visible{outline:3px solid var(--amber);outline-offset:2px}
+.wrap{max-width:1000px;margin:0 auto;padding:0 20px}
+nav{position:sticky;top:0;z-index:5;background:var(--ink);color:#fff}
+nav .wrap{display:flex;gap:6px;align-items:center;flex-wrap:wrap;padding:10px 20px}
+nav b{font-family:Sora,sans-serif;margin-right:auto}
+nav a{color:#cfe0f5;text-decoration:none;padding:6px 12px;border-radius:20px;font-size:.92rem}
+nav a:hover{background:#1d3b5c;color:#fff}
+.hero{background:var(--ink);color:#fff;padding:48px 0 56px}
+.hero .wrap{display:grid;grid-template-columns:1.1fr 1fr;gap:36px;align-items:center}
+.hero h1{color:#fff;font-size:2.4rem;font-weight:800}
+.hero p{color:#bcd0e6;max-width:46ch}
+.stack{display:grid;gap:8px}
+.layer{border:0;text-align:left;font:inherit;cursor:pointer;padding:14px 16px;border-radius:var(--r);background:#1b3a5c;color:#fff;border-left:6px solid transparent;transition:background .2s}
+.layer strong{font-family:Sora,sans-serif;display:block}
+.layer span{font-size:.85rem;color:#bcd0e6}
+.layer.on{background:var(--blue);border-left-color:var(--amber)}
+.layer.on span{color:#e6f0ff}
+#stackInfo{margin-top:12px;background:#12304f;border-radius:var(--r);padding:14px 16px;font-size:.93rem;min-height:92px}
+section{padding:44px 0}
+section h2{font-size:1.6rem;margin-bottom:6px}
+.sub{color:var(--muted);margin:0 0 22px}
+.tools{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:18px}
+input,select,button.btn,textarea{font:inherit;padding:10px 12px;border:1px solid var(--line);border-radius:8px;background:#fff;color:var(--text)}
+#search{flex:1;min-width:200px}
+.btn{cursor:pointer;background:var(--blue);color:#fff;border-color:var(--blue);font-weight:600}
+.btn.alt{background:#fff;color:var(--blue)}
+.chips{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:16px}
+.chip{border:1px solid var(--line);background:#fff;padding:5px 12px;border-radius:20px;cursor:pointer;font:inherit;font-size:.88rem}
+.chip.on{background:var(--ink);color:#fff;border-color:var(--ink)}
+#notes{display:grid;grid-template-columns:repeat(auto-fill,minmax(290px,1fr));gap:14px}
+.note{background:var(--card);border:1px solid var(--line);border-radius:var(--r);padding:18px;display:flex;flex-direction:column;gap:8px}
+.note h3{font-size:1.05rem}
+.tag{align-self:flex-start;font-size:.78rem;font-weight:600;padding:2px 10px;border-radius:20px;background:var(--sky);color:#0c4aa6}
+.tag.AI{background:#e4f6ee;color:#0d6b49}.tag.DBMS{background:#fdf0d2;color:#8a6200}
+.note ul{margin:4px 0 0;padding-left:20px;display:none}
+.note.open ul{display:block}
+.note li{margin:3px 0}
+.row{display:flex;gap:8px;margin-top:auto;padding-top:6px}
+.row button{font:inherit;font-size:.86rem;cursor:pointer;border:1px solid var(--line);background:#fff;border-radius:8px;padding:5px 10px}
+.row button.saved{background:var(--amber);border-color:var(--amber);color:#3a2b00;font-weight:600}
+.tablebox{overflow-x:auto;background:#fff;border:1px solid var(--line);border-radius:var(--r)}
+table{border-collapse:collapse;width:100%;min-width:560px;font-size:.93rem}
+th,td{padding:10px 12px;text-align:left;border-bottom:1px solid var(--line);vertical-align:top}
+th{background:var(--ink);color:#fff;font-family:Sora,sans-serif;font-weight:500}
+td.you{background:#fff3cf;font-weight:600;color:#6b4d00}
+td.prov{background:#e4f1ff;color:#0c4aa6}
+.legend{font-size:.88rem;color:var(--muted);margin:10px 0 28px}
+.quiz{background:#fff;border:1px solid var(--line);border-radius:var(--r);padding:22px}
+.opt{display:block;width:100%;text-align:left;margin:8px 0;padding:11px 14px;border:1px solid var(--line);border-radius:8px;background:#fff;font:inherit;cursor:pointer}
+.opt:hover:not(:disabled){border-color:var(--blue)}
+.opt.right{background:#dff3ea;border-color:var(--green)}
+.opt.wrong{background:#fbe1dd;border-color:var(--red)}
+#why{min-height:24px;color:var(--muted);font-size:.92rem}
+.add{display:grid;gap:10px;background:#fff;border:1px solid var(--line);border-radius:var(--r);padding:18px}
+.add textarea{min-height:90px}
+.sum{background:var(--sky);border-radius:var(--r);padding:18px 22px}
+.sum li{margin:4px 0}
+footer{background:var(--ink);color:#bcd0e6;text-align:center;padding:26px 20px;font-size:.92rem}
+
+.status{background:#12304f;border-radius:var(--r);padding:14px 16px;margin-top:12px;font-size:.9rem}
+.status div{display:flex;align-items:center;gap:8px;margin:3px 0}
+.dot{width:10px;height:10px;border-radius:50%;background:#7a8da3;flex:none}
+.dot.ok{background:#3ddc97}.dot.no{background:#e0905a}
+.ai{background:#f3f8ff;border-left:4px solid var(--blue);padding:8px 12px;border-radius:6px;font-size:.9rem;white-space:pre-wrap;display:none}
+.ai.show{display:block}
+.who{font-size:.78rem;color:var(--muted)}
+.lb{background:#fff;border:1px solid var(--line);border-radius:var(--r);padding:6px 18px;margin-top:16px}
+.lb li{gap:12px;flex-wrap:wrap;padding:6px 0;border-bottom:1px solid var(--line);list-style:none;display:flex;justify-content:space-between}
+.lb ol{margin:0;padding:0}.lb li:last-child{border:0}
+.files a{display:block;padding:8px 0;border-bottom:1px solid var(--line)}
+@media(max-width:760px){.hero .wrap{grid-template-columns:1fr}.hero h1{font-size:1.9rem}}
+@media(prefers-reduced-motion:reduce){*{transition:none!important;scroll-behavior:auto!important}}
+</style>
+</head>
+<body>
+<nav><div class="wrap"><b>Study Notes</b>
+<a href="#notes-sec">Notes</a><a href="#compare">Comparison</a><a href="#cloud">Cloud use</a><a href="#quiz-sec">Quiz</a><a href="#add">Add note</a><a href="#revise">Revision</a></div></nav>
+
+<header class="hero"><div class="wrap">
+<div>
+<h1>Study Notes</h1>
+<p>Point-wise notes, comparison tables, a quiz and a revision summary for Cloud Computing, AI and DBMS. Pick a subject to begin.</p>
+</div>
+<div>
+<div class="stack" id="stack"></div>
+<div id="stackInfo"></div>
+
+</div>
+</div></header>
+
+<main class="wrap">
+<section id="notes-sec">
+<h2>Find your notes</h2>
+<p class="sub">Search by title or topic, filter by subject, and save your important notes.</p>
+<div class="tools">
+<input id="search" type="search" placeholder="Search notes... (try: IaaS, hybrid, key)" aria-label="Search notes">
+<select id="subject" aria-label="Filter by subject">
+<option value="All">All Subjects</option>
+<option value="Cloud Computing">Cloud Computing</option>
+<option value="AI">Artificial Intelligence</option>
+<option value="DBMS">DBMS</option>
+</select>
+<button class="btn alt" id="savedOnly">Show saved only</button>
+<button class="btn alt" id="dl" style="display:none">Download notes</button>
+</div>
+<div class="sub" id="count" aria-live="polite"></div>
+<div id="notes"></div>
+</section>
+
+<section id="compare">
+<h2 id="cmpH">Comparison tables</h2>
+<p class="sub">Tables are the fastest way to revise before exams.</p>
+<div id="cmp"></div>
+</section>
+
+
+<section id="cloud">
+<h2>How this project uses the cloud</h2>
+<p class="sub">Each feature of this website maps to a real cloud concept. Useful for your viva.</p>
+<div class="tablebox"><table>
+<tr><th>Feature</th><th>Cloud concept</th><th>Service type</th></tr>
+<tr><td>Website hosted on a link</td><td>Cloud hosting, opens from any device</td><td>PaaS</td></tr>
+<tr><td>Shared notes, saved notes, scores</td><td>Cloud database, data lives outside your computer</td><td>DBaaS</td></tr>
+<tr><td>Uploaded PDFs and files</td><td>Object storage</td><td>IaaS-style storage</td></tr>
+<tr><td>Login and who can edit</td><td>Identity and access management (IAM)</td><td>Security service</td></tr>
+<tr><td>Explain simply button</td><td>AI model used over the internet</td><td>AI as a service</td></tr>
+<tr><td>The whole website</td><td>Used in a browser, nothing to install</td><td>SaaS</td></tr>
+</table></div>
+</section>
+
+
+
+<section id="quiz-sec">
+<h2 id="quizH">Quick quiz</h2>
+<p class="sub">5 questions for the selected subject.</p>
+<div class="quiz" id="quiz"></div>
+
+</section>
+
+<section id="add">
+<h2>Add your own note</h2>
+<p class="sub">Saved in this browser, so it stays after you refresh.</p>
+<div class="add">
+<input id="nTitle" placeholder="Note title" aria-label="Note title">
+<select id="nSubject" aria-label="Subject"><option value="Cloud Computing">Cloud Computing</option><option value="AI">Artificial Intelligence</option><option value="DBMS">DBMS</option></select>
+<textarea id="nPoints" placeholder="Write one point per line" aria-label="Note points"></textarea>
+<div><button class="btn" id="addBtn">Add note</button> <span id="addMsg" aria-live="polite"></span></div>
+</div>
+</section>
+
+<section id="revise">
+<h2 id="sumH">Revision summary</h2>
+<div class="sum" id="sum"></div>
+</section>
+</main>
+
+<footer>Study Notes · Cloud Computing, AI and DBMS · Learn. Revise. Succeed.</footer>
+
+<script>
+/* ---------- DATA ---------- */
+const baseNotes=[
+{title:"Cloud Computing Basics",subject:"Cloud Computing",points:["Cloud computing = using servers, storage and software over the internet.","No need to buy or maintain your own hardware.","Pay-as-you-go: you pay only for what you use.","Five key features: on-demand self-service, broad network access, resource pooling, rapid elasticity, measured service.","Examples: Google Drive, Gmail, Netflix, AWS."]},
+{title:"Service Models: IaaS, PaaS, SaaS",subject:"Cloud Computing",points:["IaaS: you get virtual servers, storage, network. Example: AWS EC2.","PaaS: you get a ready platform to build and run apps. Example: Google App Engine, Heroku.","SaaS: you get a complete app to use in a browser. Example: Gmail, Google Docs.","More control in IaaS, less work in SaaS.","Memory trick: I = Infrastructure, P = Platform, S = Software."]},
+{title:"Cloud Deployment Models",subject:"Cloud Computing",points:["Public cloud: owned by provider, shared by many users.","Private cloud: used by one organisation only, more secure.","Hybrid cloud: public + private working together.","Community cloud: shared by organisations with common goals."]},
+{title:"Virtualization",subject:"Cloud Computing",points:["One physical server is divided into many virtual machines (VMs).","A hypervisor creates and manages the VMs. Examples: VMware, KVM, Hyper-V.","Type 1 hypervisor runs directly on hardware; Type 2 runs on an OS.","Gives better hardware use and easy scaling."]},
+{title:"Scalability and Elasticity",subject:"Cloud Computing",points:["Vertical scaling: make one server bigger (more CPU/RAM).","Horizontal scaling: add more servers.","Elasticity: resources grow and shrink automatically with demand.","Example: an exam-result website gets heavy traffic for a day, then goes back to normal."]},
+{title:"Cloud Security and Risks",subject:"Cloud Computing",points:["Shared responsibility: provider secures the cloud, you secure what you put in it.","Common risks: data breach, weak passwords, misconfiguration.","Protection: encryption, multi-factor login, access control (IAM), backups.","Vendor lock-in: hard to move to another provider later."]},
+{title:"Major Cloud Providers",subject:"Cloud Computing",points:["AWS (Amazon): largest provider; EC2, S3, Lambda.","Microsoft Azure: strong for enterprises; VMs, Blob Storage.","Google Cloud: strong in data and AI; Compute Engine, BigQuery.","Free tiers are available for students to practise."]},
+{title:"Intelligent Agents",subject:"AI",points:["An agent senses its environment and acts on it.","Parts: sensors, actuators, agent program.","Types: simple reflex, model-based, goal-based, utility-based, learning agent.","Example: a robot vacuum senses dirt and cleans it."]},
+{title:"AI in the Cloud",subject:"AI",points:["Training AI needs heavy computing (GPUs), which cloud provides on rent.","Services: AWS SageMaker, Azure ML, Google Vertex AI.","Students can train models without buying costly hardware."]},
+{title:"Database Fundamentals",subject:"DBMS",points:["Database = organised collection of data in tables.","Table has rows (records) and columns (attributes).","Primary key: uniquely identifies each row.","Foreign key: links one table to another.","DBMS examples: MySQL, PostgreSQL, Oracle."]},
+{title:"Cloud Databases",subject:"DBMS",points:["Database hosted and managed by a cloud provider.","Examples: Amazon RDS, DynamoDB, Firebase Firestore.","Benefits: automatic backup, scaling, high availability.","Use SQL (relational) or NoSQL depending on the data."]},
+{title:"Problem Solving and Search",subject:"AI",points:["AI solves problems by searching through possible states to reach a goal.","BFS explores level by level (uses a queue) and finds the shortest path.","DFS goes deep first (uses a stack) and uses less memory.","A* search uses cost so far + estimated cost to goal (f = g + h).","Example: Google Maps finding the best route."]},
+{title:"Machine Learning Basics",subject:"AI",points:["Machine learning = computers learn patterns from data, not fixed rules.","Supervised: data has labels (spam / not spam).","Unsupervised: no labels, finds groups (customer clustering).","Reinforcement: agent learns by reward and penalty (game playing).","Steps: collect data, train model, test model, use model."]},
+{title:"Neural Networks and Deep Learning",subject:"AI",points:["Neural network = layers of connected neurons inspired by the brain.","Layers: input, hidden, output.","Each connection has a weight; training adjusts the weights.","Deep learning = neural networks with many hidden layers.","Used in image recognition, voice assistants and chatbots."]},
+{title:"Knowledge Representation and Logic",subject:"AI",points:["AI must store facts in a form a computer can use.","Propositional logic: simple true/false statements (P AND Q).","Predicate logic: adds objects and relations, e.g. Loves(Ram, Sita).","Other methods: semantic networks, frames, production rules.","Inference = deriving new facts from known facts."]},
+{title:"Game Playing and Minimax",subject:"AI",points:["Used in two-player games like chess and tic-tac-toe.","Minimax: one player maximises score, the other minimises it.","Alpha-beta pruning skips branches that cannot change the result.","This makes the search much faster."]},
+{title:"Natural Language Processing",subject:"AI",points:["NLP lets computers understand human language.","Steps: tokenization, stop-word removal, stemming, tagging, parsing.","Applications: chatbots, translation, sentiment analysis.","Example: Google Translate, voice assistants."]},
+{title:"ER Model",subject:"DBMS",points:["ER diagram shows the database design before making tables.","Entity = thing (Student). Attribute = property (Name). Relationship = link (Enrolls).","Entity types: strong (has own key) and weak (depends on another).","Cardinality: 1:1, 1:N, M:N.","Rectangle = entity, oval = attribute, diamond = relationship."]},
+{title:"Keys in DBMS",subject:"DBMS",points:["Super key: any set of columns that identifies a row.","Candidate key: smallest super key.","Primary key: candidate key chosen as the main key; cannot be NULL.","Alternate key: candidate keys not chosen as primary.","Foreign key: refers to the primary key of another table."]},
+{title:"Normalization",subject:"DBMS",points:["Normalization removes repeated data and update problems.","1NF: every cell has a single value.","2NF: 1NF + no partial dependency on part of a key.","3NF: 2NF + no transitive dependency.","BCNF: stronger form of 3NF; every determinant is a candidate key."]},
+{title:"SQL Basics",subject:"DBMS",points:["DDL: CREATE, ALTER, DROP (structure).","DML: INSERT, UPDATE, DELETE (data).","DQL: SELECT (read data).","DCL: GRANT, REVOKE (permissions). TCL: COMMIT, ROLLBACK.","Example: SELECT name FROM student WHERE marks > 60;"]},
+{title:"Joins",subject:"DBMS",points:["Join combines rows from two tables using a related column.","INNER JOIN: only matching rows.","LEFT JOIN: all rows of left table + matches from right.","RIGHT JOIN: all rows of right table + matches from left.","FULL JOIN: all rows from both tables."]},
+{title:"Transactions and ACID",subject:"DBMS",points:["Transaction = a group of operations treated as one unit.","Atomicity: all or nothing.","Consistency: database stays valid after the transaction.","Isolation: transactions do not disturb each other.","Durability: committed data is never lost.","Example: bank transfer must debit and credit together."]},
+{title:"Indexing",subject:"DBMS",points:["Index = extra structure that makes searching faster, like a book index.","Types: primary, secondary, clustering index.","B+ tree is the most common index structure.","Faster reads, but slower inserts and more storage."]}
+];
+
+const LS={get(k,d){try{const v=localStorage.getItem(k);return v?JSON.parse(v):d}catch(e){return d}},set(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}}};
+let custom=LS.get("csn_custom",[]);
+let saved=LS.get("csn_saved",[]);
+let onlySaved=false;
+const esc=s=>String(s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+
+/* ---------- SUBJECTS ---------- */
+const SUBJ=[
+{k:"Cloud Computing",s:"Cloud Computing",d:"Service models, deployment models, virtualization, security."},
+{k:"AI",s:"Artificial Intelligence",d:"Agents, search, machine learning, neural networks, NLP."},
+{k:"DBMS",s:"DBMS",d:"ER model, keys, normalization, SQL, transactions."}
+];
+let curSub="Cloud Computing";
+const stackEl=document.getElementById("stack"),info=document.getElementById("stackInfo");
+SUBJ.forEach(x=>{const b=document.createElement("button");b.className="layer";b.dataset.k=x.k;b.innerHTML=`<strong>${x.s}</strong><span>${x.d}</span>`;b.onclick=()=>setSubject(x.k);stackEl.appendChild(b)});
+function setSubject(k){
+curSub=k;
+[...stackEl.children].forEach(c=>c.classList.toggle("on",c.dataset.k===k));
+const n=baseNotes.filter(x=>x.subject===k).length;
+info.textContent=n+" notes, "+QS[k].length+" quiz questions and a revision summary are ready for this subject.";
+document.getElementById("subject").value=k;
+renderCompare();renderSum();startQuiz();showNotes();
+}
+
+/* ---------- CLOUD STATE ---------- */
+let myBest=LS.get("csn_best2",{cc:0,ai:0,db:0,total:0});
+let db=null,user=null,assets=null,sample=null,downloads=null,uid=null,canWrite=false,canEdit=false;
+let cloudNotes=[];
+const NAMES={};
+function setStatus(){
+const rows=[["Cloud database",!!db&&!!uid],["Signed in as a viewer",!!uid],["File storage",!!assets],["AI explain",!!sample]];
+const _st=document.getElementById("status");if(!_st)return;_st.innerHTML="<b>Cloud services</b>"+rows.map(r=>`<div><span class="dot ${r[1]?"ok":"no"}"></span>${r[0]}: ${r[1]?"connected":"not available"}</div>`).join("")+(db?"":'<div style="color:#bcd0e6">Open the hosted link to use cloud features. Offline mode saves in this browser.</div>');
+}
+async function persistProfile(){
+if(db&&uid&&canWrite){try{await db.doc("data/users/"+uid+"/profile").set({saved})}catch(e){}}
+LS.set("csn_saved",saved);
+}
+const all=()=>baseNotes.concat(cloudNotes.map(c=>({...c,cloud:true})),custom.map(c=>({...c,local:true})));
+
+/* ---------- NOTES ---------- */
+function showNotes(){
+const q=document.getElementById("search").value.toLowerCase().trim();
+const sub=document.getElementById("subject").value;
+const list=all().filter(n=>(n.title+" "+n.points.join(" ")).toLowerCase().includes(q)&&(sub==="All"||n.subject===sub)&&(!onlySaved||saved.includes(n.title)));
+document.getElementById("count").textContent=list.length+" note"+(list.length===1?"":"s")+" found";
+document.getElementById("notes").innerHTML=list.length?list.map(n=>{
+const isS=saved.includes(n.title);
+const mine=(n.cloud&&(n.by===uid||canEdit))||n.local;
+return `<article class="note" data-t="${esc(n.title)}" data-id="${esc(n.id||"")}"><span class="tag ${esc(n.subject)}">${esc(n.subject)}${n.cloud?" · shared":n.local?" · yours":""}</span>
+<h3>${esc(n.title)}</h3><ul>${n.points.map(p=>`<li>${esc(p)}</li>`).join("")}</ul>
+<div class="ai" aria-live="polite"></div>
+<div class="row"><button data-a="open">Show points</button><button data-a="save" class="${isS?"saved":""}">${isS?"Saved":"Save"}</button>${sample?'<button data-a="ai">Explain simply</button>':""}${mine?'<button data-a="del">Delete</button>':""}</div></article>`}).join("")
+:"<p>No notes found. Try a different word or subject.</p>";
+}
+document.getElementById("notes").addEventListener("click",async e=>{
+const b=e.target.closest("button");if(!b)return;
+const card=b.closest(".note"),t=card.dataset.t,id=card.dataset.id;
+if(b.dataset.a==="open"){card.classList.toggle("open");b.textContent=card.classList.contains("open")?"Hide points":"Show points"}
+if(b.dataset.a==="save"){saved=saved.includes(t)?saved.filter(x=>x!==t):saved.concat(t);await persistProfile();showNotes()}
+if(b.dataset.a==="del"){
+if(id){try{await db.doc("notes/"+id).delete()}catch(err){alert("Could not delete this note.")}}
+else{custom=custom.filter(c=>c.title!==t);LS.set("csn_custom",custom);showNotes()}
+}
+if(b.dataset.a==="ai"){
+const box=card.querySelector(".ai"),n=all().find(x=>x.title===t);
+box.classList.add("show");box.textContent="Thinking...";b.disabled=true;
+try{
+const r=await sample("Explain these exam notes to a first-year engineering student in very simple language. Use at most 5 short bullet points and one real-life example. Topic: "+n.title+". Notes: "+n.points.join(" "),{modelTier:"quick"});
+box.textContent=r.text;
+}catch(err){box.textContent=err&&err.code==="rate_limited"?"Too many requests. Wait a minute and try again.":"AI explain is not available right now."}
+b.disabled=false;
+}
+});
+document.getElementById("search").oninput=showNotes;
+document.getElementById("subject").onchange=function(){if(this.value==="All")showNotes();else setSubject(this.value)};
+document.getElementById("savedOnly").onclick=function(){onlySaved=!onlySaved;this.textContent=onlySaved?"Show all notes":"Show saved only";showNotes()};
+
+/* ---------- ADD NOTE ---------- */
+document.getElementById("addBtn").onclick=async()=>{
+const t=document.getElementById("nTitle").value.trim(),s=document.getElementById("nSubject").value;
+const p=document.getElementById("nPoints").value.split("\n").map(x=>x.trim()).filter(Boolean);
+const m=document.getElementById("addMsg");
+if(!t||!p.length){m.textContent="Add a title and at least one point.";return}
+if(all().some(n=>n.title.toLowerCase()===t.toLowerCase())){m.textContent="A note with this title already exists.";return}
+try{
+if(db&&uid&&canWrite){await db.collection("notes").add({title:t,subject:s,points:p,by:uid,ts:Date.now()});m.textContent="Note added to the cloud database."}
+else{custom.push({title:t,subject:s,points:p});LS.set("csn_custom",custom);m.textContent="Note saved in this browser (cloud not available)."}
+document.getElementById("nTitle").value="";document.getElementById("nPoints").value="";showNotes();
+}catch(e){m.textContent="Could not save. You may have view-only access."}
+};
+
+/* ---------- DOWNLOAD ---------- */
+document.getElementById("dl").onclick=async()=>{
+const txt=all().map(n=>n.title+" ("+n.subject+")\n"+n.points.map(p=>" - "+p).join("\n")).join("\n\n");
+try{await downloads.save({filename:"study-notes.txt",data:txt})}catch(e){}
+};
+
+/* ---------- FILES ---------- */
+function renderFiles(list){
+document.getElementById("files").innerHTML=list.length?list.map(f=>`<a href="/_blob/${esc(f.id)}" target="_blank" rel="noopener">${esc(f.name)}</a>`).join(""):"<p>No files yet.</p>";
+}
+const _ub=document.getElementById("upBtn");if(_ub)_ub.onclick=async()=>{
+const f=document.getElementById("upFile").files[0],m=document.getElementById("upMsg");
+if(!f){m.textContent="Choose a file first.";return}
+m.textContent="Uploading...";
+try{const r=await assets.upload(f);await db.collection("files").add({name:f.name,id:r.id,by:uid,ts:Date.now()});m.textContent="Uploaded.";document.getElementById("upFile").value=""}
+catch(e){m.textContent="Upload failed. Check file type and size (max 20 MB)."}
+};
+
+/* ---------- LEADERBOARD ---------- */
+const KEY={"Cloud Computing":"cc","AI":"ai","DBMS":"db"};
+async function renderLb(docs){
+const ids=docs.map(d=>d.id);
+try{if(user&&user.profiles){const ps=await user.profiles(ids);ids.forEach(i=>NAMES[i]=(ps[i]&&ps[i].name)||"")}}catch(e){}
+const _lb=document.getElementById("lb");if(!_lb)return;_lb.innerHTML=docs.length?docs.map((d,i)=>{const v=d.data();return `<li><span>${i+1}. ${esc(NAMES[d.id]||"Student")}${d.id===uid?" (you)":""}</span><span>Cloud ${esc(v.cc||0)} · AI ${esc(v.ai||0)} · DBMS ${esc(v.db||0)} <b>Total ${esc(v.total||0)}</b></span></li>`}).join(""):"<li>No scores yet. Be the first.</li>";
+}
+async function saveScore(sub,score){
+const k=KEY[sub];
+if(score>(myBest[k]||0))myBest[k]=score;
+myBest.total=(myBest.cc||0)+(myBest.ai||0)+(myBest.db||0);
+LS.set("csn_best2",myBest);
+if(db&&uid&&canWrite){try{await db.doc("scores/"+uid).set({...myBest,ts:Date.now()})}catch(e){}}
+}
+
+async function initCloud(){setStatus()}
+
+/* ---------- COMPARISON TABLES ---------- */
+const tbl=(h,rows)=>`<div class="tablebox"><table><tr>${h.map(x=>`<th>${x}</th>`).join("")}</tr>${rows.map(r=>`<tr>${r.map(c=>`<td>${c}</td>`).join("")}</tr>`).join("")}</table></div>`;
+function respTable(){
+const rows=["Applications","Data","Runtime","Middleware","Operating system","Virtualization","Servers","Storage","Networking"];
+const you={"On-premises":9,"IaaS":5,"PaaS":2,"SaaS":0};const cols=Object.keys(you);
+let h="<tr><th>Layer</th>"+cols.map(c=>`<th>${c}</th>`).join("")+"</tr>";
+rows.forEach((r,i)=>{h+=`<tr><td>${r}</td>`+cols.map(c=>i<you[c]?'<td class="you">You</td>':'<td class="prov">Provider</td>').join("")+"</tr>"});
+return `<div class="tablebox"><table>${h}</table></div><p class="legend">Yellow = you manage it. Blue = cloud provider manages it.</p>`;
+}
+const H3=t=>`<h3 style="margin:18px 0 10px">${t}</h3>`;
+const CMP={
+"Cloud Computing":()=>H3("Who manages what? (Service models)")+respTable()+H3("Deployment models")+tbl(["Model","Who uses it","Cost","Control","Example"],[
+["Public","Anyone over the internet","Low, pay per use","Low","AWS, Azure, Google Cloud"],
+["Private","One organisation only","High","High","Bank's own data centre"],
+["Hybrid","Mix of public and private","Medium","Medium to high","Hospital: records private, website public"],
+["Community","Group with common needs","Shared between members","Medium","Universities sharing research cloud"]]),
+"AI":()=>H3("Types of agents")+tbl(["Agent","How it decides","Example"],[
+["Simple reflex","Reacts to the current input only","Thermostat"],
+["Model-based","Keeps a memory of the world","Self-driving car lane tracking"],
+["Goal-based","Chooses actions that reach a goal","GPS navigation"],
+["Utility-based","Picks the best outcome among many","Ride-sharing price and route"],
+["Learning","Improves from experience","Spam filter"]])
++H3("BFS vs DFS")+tbl(["Point","BFS","DFS"],[
+["Data structure","Queue (FIFO)","Stack (LIFO)"],["Order","Level by level","Deep first, then back"],["Shortest path","Yes (equal costs)","Not guaranteed"],["Memory","High","Low"]])
++H3("AI vs ML vs Deep Learning")+tbl(["Term","Meaning","Example"],[
+["AI","Machines doing smart tasks","Chess program"],["Machine learning","AI that learns from data","Movie recommendations"],["Deep learning","ML using many-layer neural networks","Face recognition"]])
++H3("Types of machine learning")+tbl(["Type","Data","Example"],[
+["Supervised","Labelled","Spam detection"],["Unsupervised","Not labelled","Customer groups"],["Reinforcement","Reward and penalty","Game-playing bot"]]),
+"DBMS":()=>H3("SQL command groups")+tbl(["Group","Full form","Commands","Used for"],[
+["DDL","Data Definition Language","CREATE, ALTER, DROP","Table structure"],["DML","Data Manipulation Language","INSERT, UPDATE, DELETE","Changing data"],["DQL","Data Query Language","SELECT","Reading data"],["DCL","Data Control Language","GRANT, REVOKE","Permissions"],["TCL","Transaction Control Language","COMMIT, ROLLBACK","Transactions"]])
++H3("SQL vs NoSQL")+tbl(["Point","SQL (relational)","NoSQL"],[
+["Structure","Tables with fixed schema","Flexible: documents, key-value, graph"],["Scaling","Mostly vertical","Mostly horizontal"],["Best for","Banking, structured data","Big data, social media, real-time apps"],["Example","MySQL, PostgreSQL","MongoDB, DynamoDB"]])
++H3("Normal forms")+tbl(["Form","Rule"],[
+["1NF","Single value in each cell"],["2NF","1NF + no partial dependency"],["3NF","2NF + no transitive dependency"],["BCNF","Every determinant is a candidate key"]])
++H3("Types of joins")+tbl(["Join","Result"],[
+["INNER","Only matching rows"],["LEFT","All left rows + matches"],["RIGHT","All right rows + matches"],["FULL","All rows from both"]])
+};
+function renderCompare(){
+document.getElementById("cmpH").textContent="Comparison tables: "+curSub;
+document.getElementById("cmp").innerHTML=CMP[curSub]();
+}
+
+/* ---------- REVISION ---------- */
+const SUM={
+"Cloud Computing":["Cloud = renting computing resources over the internet, pay only for what you use.","Service models: <b>IaaS</b> (servers), <b>PaaS</b> (platform to code), <b>SaaS</b> (ready app).","Deployment: <b>Public, Private, Hybrid, Community</b>.","Benefits: scalability, low cost, availability. Risks: security, internet dependency, vendor lock-in.","Virtualization uses a hypervisor to run many VMs on one server."],
+"AI":["An agent senses (sensors) and acts (actuators). Types: reflex, model-based, goal, utility, learning.","BFS = queue, shortest path. DFS = stack, less memory. A* uses f = g + h.","ML types: supervised, unsupervised, reinforcement.","Neural network = input, hidden and output layers; deep learning = many hidden layers.","Minimax is used for two-player games; alpha-beta pruning makes it faster."],
+"DBMS":["Keys: super, candidate, primary, alternate, foreign.","ER model: entity, attribute, relationship; cardinality 1:1, 1:N, M:N.","Normalization: 1NF, 2NF, 3NF, BCNF removes repeated data.","SQL groups: DDL, DML, DQL, DCL, TCL. Joins: inner, left, right, full.","ACID: Atomicity, Consistency, Isolation, Durability. Index speeds up search (B+ tree)."]
+};
+function renderSum(){
+document.getElementById("sumH").textContent="Revision summary: "+curSub;
+document.getElementById("sum").innerHTML="<ul>"+SUM[curSub].map(x=>`<li>${x}</li>`).join("")+"</ul>";
+}
+
+/* ---------- QUIZ ---------- */
+const QS={
+"Cloud Computing":[
+{q:"Which service model gives you a ready-to-use application?",o:["IaaS","PaaS","SaaS","DaaS"],a:2,w:"SaaS delivers a complete app, like Gmail."},
+{q:"Which cloud is used by only one organisation?",o:["Public","Private","Hybrid","Community"],a:1,w:"Private cloud is dedicated to one organisation."},
+{q:"What software creates virtual machines on a server?",o:["Compiler","Hypervisor","Browser","Firewall"],a:1,w:"A hypervisor creates and manages VMs."},
+{q:"Resources automatically growing and shrinking with demand is called:",o:["Elasticity","Latency","Encryption","Migration"],a:0,w:"Elasticity adjusts resources to match demand."},
+{q:"AWS EC2 is an example of:",o:["SaaS","PaaS","IaaS","None of these"],a:2,w:"EC2 gives virtual servers, which is IaaS."}],
+"AI":[
+{q:"An agent that acts only on the current input is called:",o:["Simple reflex agent","Goal-based agent","Learning agent","Utility agent"],a:0,w:"A simple reflex agent uses condition-action rules on the current percept."},
+{q:"Which search uses a queue?",o:["DFS","BFS","Hill climbing","Minimax"],a:1,w:"BFS uses a FIFO queue; DFS uses a stack."},
+{q:"Learning from labelled data is called:",o:["Supervised learning","Unsupervised learning","Reinforcement learning","Clustering"],a:0,w:"Supervised learning uses labelled examples."},
+{q:"Which algorithm is used for two-player games?",o:["Minimax","BFS","K-means","Apriori"],a:0,w:"Minimax picks the best move assuming the opponent also plays best."},
+{q:"A neural network is built from layers of:",o:["Neurons","Tables","Hypervisors","Keys"],a:0,w:"Neurons are connected in input, hidden and output layers."}],
+"DBMS":[
+{q:"Which key uniquely identifies each row of a table?",o:["Foreign key","Primary key","Composite index","Alternate view"],a:1,w:"The primary key is unique and cannot be NULL."},
+{q:"In ACID, the letter A stands for:",o:["Atomicity","Availability","Aggregation","Authorization"],a:0,w:"Atomicity means all or nothing."},
+{q:"Which SQL command removes rows from a table?",o:["DROP","DELETE","REMOVE","CUT"],a:1,w:"DELETE removes rows. DROP removes the whole table."},
+{q:"Removing repeated data from tables is called:",o:["Normalization","Indexing","Joining","Sharding"],a:0,w:"Normalization reduces redundancy."},
+{q:"Which join returns only matching rows from both tables?",o:["INNER JOIN","LEFT JOIN","FULL JOIN","CROSS JOIN"],a:0,w:"INNER JOIN keeps only rows that match in both tables."}]
+};
+let qi=0,score=0,qs=QS["Cloud Computing"];
+const quiz=document.getElementById("quiz");
+function startQuiz(){qs=QS[curSub];qi=0;score=0;document.getElementById("quizH").textContent="Quick quiz: "+curSub;renderQ()}
+function renderQ(){
+if(qi>=qs.length){saveScore(curSub,score);quiz.innerHTML=`<h3>Your score: ${score} / ${qs.length}</h3><p>${score>=4?"Great work! You are exam ready.":score>=2?"Good start. Revise the notes once more.":"Read the notes again and retry."}</p><button class="btn" id="again">Try again</button>`;
+document.getElementById("again").onclick=startQuiz;return}
+const q=qs[qi];
+quiz.innerHTML=`<div class="sub">Question ${qi+1} of ${qs.length}</div><h3>${q.q}</h3>`+q.o.map((o,i)=>`<button class="opt" data-i="${i}">${o}</button>`).join("")+`<div id="why"></div><button class="btn" id="next" style="display:none">${qi===qs.length-1?"See score":"Next question"}</button>`;
+quiz.querySelectorAll(".opt").forEach(b=>b.onclick=()=>{
+const i=+b.dataset.i;quiz.querySelectorAll(".opt").forEach(x=>x.disabled=true);
+quiz.querySelectorAll(".opt")[q.a].classList.add("right");
+if(i===q.a)score++;else b.classList.add("wrong");
+document.getElementById("why").textContent=(i===q.a?"Correct. ":"Not quite. ")+q.w;
+const n=document.getElementById("next");n.style.display="inline-block";n.onclick=()=>{qi++;renderQ()};
+});
+}
+setSubject("Cloud Computing");
+
+setStatus();
+initCloud();
+</script>
+</body>
+</html>
